@@ -1,19 +1,30 @@
 import React from 'react'
-import * as _ from 'lodash/fp'
+// import * as _ from 'lodash/fp'
 
-export function JSONTable (props) {
-  const rows = _.map(r => <tr>{row(r)}</tr>)
-  const row = _.mapValues(v => <td>{v}</td>)
-  const body = rows(props.json)
+export default class JSONTable extends React.Component {
+  constructor (props) {
+    super(props)
+    this.state = {
+      json: []
+    }
+  }
 
-  const header = _.map(h => <th>{h}</th>)(Object.keys(props.json[0]))
-
-  return (
-    <table>
-      <thead>
-        <tr>{header}</tr>
-      </thead>
-      <tbody>{body}</tbody>
-    </table>
-  )
+  render () {
+    if (!this.props.json) return null
+    const body = this.props.json.map(r => {
+      const a = this.props.schema.map(key => {
+        return <td>{r[key]}</td>
+      })
+      return <tr>{a}</tr>
+    })
+    const header = this.props.schema.map(s => { return <th>{s}</th> })
+    return (
+      <table>
+        <thead>
+          <tr>{header}</tr>
+        </thead>
+        <tbody>{body}</tbody>
+      </table>
+    )
+  }
 }
