@@ -1,0 +1,39 @@
+@tailwind base;
+
+* {
+  box-sizing: border-box;
+  font-family: 'Avenir Next';
+  font-weight: 400;
+}
+
+h1, h2, h3, h4, h5, h6, label {
+  font-weight: 500;
+}
+
+@tailwind components;
+
+@tailwind utilities;
+
+.content-box {
+  box-sizing: content-box;
+}
+
+.text-shadow {
+  text-shadow: 1px 1px 4px #444444;
+}
+
+.svg-shadow {
+  filter: drop-shadow( 1px 1px 4px #333333cc);
+}
+
+.svg-shadow-blue {
+  filter: drop-shadow( 1px 1px 4px #2B6CB0ee);
+}
+
+.no-resize {
+  resize: none;
+}
+
+.before\:black::before {
+  color: black
+}
