@@ -5,7 +5,8 @@ module.exports = {
     },
     linearGradients: {
       colors: {
-        pink: ['#FC4278', '#FF2F53']
+        pink: ['#FC4278', '#FF2F53'],
+        fade: ['#FFFFFFFF 40%', '#FFFFFF00 80%']
       }
     },
     scale: {
@@ -28,7 +29,9 @@ module.exports = {
     extend: {
       colors: {
         'hot-pink': '#FF2F53',
-        'dark-grey': '#383838'
+        'dark-grey': '#383838',
+        'transparent-blue': '#EBF8FF88',
+        'transparent-grey': '#E2E8F088'
       },
       margin: {
         '1/2': '50%',
@@ -37,6 +40,7 @@ module.exports = {
       },
       spacing: {
         7: '1.75rem',
+        28: '7rem',
         52: '13rem',
         68: '17rem',
         72: '18rem',
