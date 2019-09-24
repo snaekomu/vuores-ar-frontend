@@ -6,8 +6,13 @@ import Menu from '../components/Menu'
 function Layout (props) {
   return (
     <div className='container p-8 m-auto text-gray-700'>
-      <Header header={props.header} />
-      <Menu />
+      <Header
+        header={props.header}
+      />
+      <Menu
+        handleClick={props.handleClick}
+        status={props.status}
+      />
       {props.children}
     </div>
   )
@@ -15,7 +20,9 @@ function Layout (props) {
 
 Layout.propTypes = {
   header: PropTypes.string,
-  children: PropTypes.element
+  children: PropTypes.oneOfType([PropTypes.element, PropTypes.array]),
+  status: PropTypes.element,
+  handleClick: PropTypes.func
 }
 
 export default Layout
