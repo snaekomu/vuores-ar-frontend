@@ -1,33 +1,25 @@
 /* eslint camelcase: [2, {allow: ["^_"]}] */
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
+import getConfig from 'next/config'
+
+import axios from 'axios'
+
+const { publicRuntimeConfig } = getConfig()
+const api = publicRuntimeConfig.apiUri
 
 function Grid (props) {
   if (!props.collections) return null
   if (!Array.isArray(props.collections)) return null
 
-  const [dataCollections, setCollections] = useState(props.collections && props.collections.map(c => ({ id: c._id, name: c.name })))
-  const [dataContents, setContents] = useState(props.contents && props.contents.reduce((prev, { gallery, _id, ...curr }) => ({ ...prev, [gallery]: { ...prev[gallery], [_id]: curr } }), {}))
-  const [dataTargets, setTargets] = useState(props.targets && props.targets.reduce((prev, curr) => (curr.gallery && { ...prev, [curr.gallery]: curr }), {}))
+  const dataCollections = props.collections && props.collections.map(c => ({ id: c._id, name: c.name }))
+  const dataContents = props.contents && props.contents.reduce((prev, { gallery, _id, ...curr }) => ({ ...prev, [gallery]: { ...prev[gallery], [_id]: { ...curr } } }), {})
+  const dataTargets = props.targets && props.targets.reduce((prev, curr) => (curr.gallery && { ...prev, [curr.gallery]: { ...curr } }), {})
 
-  const func = {
-    deleteCollection: function (_id) {
-      setCollections((({ [_id]: id, ...rest }) => ({ ...rest }))())
-    },
-    deleteTarget: function (_id) {
-      setTargets((({ [_id]: id, ...rest }) => ({ ...rest }))())
-    },
-    editCollection: function (_id, _col) {
-      setCollections((({ [_id]: id, ...rest }) => ({ [_id]: { ...id, ..._col }, ...rest }))())
-    },
-    swapTargets: function (_from, _to) {
-      setTargets((({ [_from]: from, [_to]: to, ...rest }) => ({ [_from]: to, [_to]: from, ...rest }))())
-    },
-    deleteContent: function (gallery, content) {
-      setContents((({ [gallery]: { [content]: del, ...conts }, ...rest }) => ({ ...rest, [gallery]: { ...conts } }))(dataContents))
-    }
-  }
+  const func = props.funcContructor({ dataCollections, dataContents, dataTargets })
+
+  // const render = useMemo(() => props.render({ dataCollections, dataContents, dataTargets, func }), [dataTargets, dataContents, dataCollections])
 
   return (
     <div className='flex flex-wrap'>
@@ -40,7 +32,18 @@ Grid.propTypes = {
   collections: PropTypes.array,
   contents: PropTypes.array,
   targets: PropTypes.array,
-  render: PropTypes.func.isRequired
+  render: PropTypes.func.isRequired,
+  setStatus: PropTypes.func,
+  funcContructor: PropTypes.func
 }
 
 export default Grid
+
+/* swapTargets: function (_from, _to) {
+  props.func.setStatus(ActivityIndicator('Loading...', 'text-black'))
+  const oldTargets = [...props.targets]
+  const newTargets = { ...dataTargets }
+  newTargets[_from].gallery = _to
+  if (newTargets[_to]) newTargets[_to].gallery = _from
+  const arrayTargets = Object.keys(newTargets).map(k => newTargets[k])
+} */

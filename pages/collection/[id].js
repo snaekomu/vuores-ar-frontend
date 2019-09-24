@@ -1,48 +1,70 @@
-import { DndProvider } from 'react-dnd'
-import HTML5Backend from 'react-dnd-html5-backend'
+import { useState } from 'react'
 
-export default function (props) {
-    const [targets, setTargets] = useState(null)
-    const [collections, setCollections] = useState(null)
-    const [contents, setContents] = useState(null)
-    const [loading, setLoading] = useState(null)
+import Layout from '../../layouts/Layout'
+import Grid from '../../components/Grid'
 
-    /* function fetch () {
-      const res = Promise.all([
-        axios.get(`${process.env.API_URI}/targets`),
-        axios.get(`${process.env.API_URI}/galleries`),
-        axios.get(`${process.env.API_URI}/contents`)
-      ])
-        .then(([tar, col, con]) => {
-          setTargets(tar.data)
-          setContents(con.data)
-          setCollections(col.data)
-          console.log(contents)
-        })
-        .catch(err => {
-          console.error(err)
-        })
-    } */
+import 'sanitize.css'
+import '../../styles/tailwind.css'
 
-    /* function filter (dat) {
-      return props.match && props.match.params && props.match.params.name
-        ? /^[0-9a-fA-F]{24}$/.test(props.match.params.name)
-          ? dat.filter(d => d._id === props.match.params.name)
-          : dat.filter(d => d.name === props.match.params.name)
-        : dat
-    } */
+function CollectionPage (props) {
+  const [targets, setTargets] = useState(null)
+  const [collections, setCollections] = useState(null)
+  const [contents, setContents] = useState(null)
+  const [loading, setLoading] = useState(null)
 
-    // useEffect(fetch, [])
+  /* function fetch () {
+    const res = Promise.all([
+      axios.get(`${process.env.API_URI}/targets`),
+      axios.get(`${process.env.API_URI}/galleries`),
+      axios.get(`${process.env.API_URI}/contents`)
+    ])
+      .then(([tar, col, con]) => {
+        setTargets(tar.data)
+        setContents(con.data)
+        setCollections(col.data)
+        console.log(contents)
+      })
+      .catch(err => {
+        console.error(err)
+      })
+  } */
 
-    return (
-      <div className='container p-8 m-auto text-gray-700'>
-        <DndProvider backend={HTML5Backend}>
-          {contents && collections && targets &&
-            <CollectionGrid
+  /* function filter (dat) {
+    return props.match && props.match.params && props.match.params.name
+      ? /^[0-9a-fA-F]{24}$/.test(props.match.params.name)
+        ? dat.filter(d => d._id === props.match.params.name)
+        : dat.filter(d => d.name === props.match.params.name)
+      : dat
+  } */
 
-            />
-          }
-        </DndProvider>
-      </div>
-    )
-  }
+  // useEffect(fetch, [])
+
+  return (
+    <Layout
+      header="haha"
+    >
+      <Grid
+        collections={collections}
+        contents={contents}
+        targets={targets}
+        render={({ dataCollections, dataContents, dataTargets, func }) => {
+          const collectionsArray = dataCollections.map((c, i) => {
+            const Type = dataContents[c.id] ? CollectionsCell : CollectionsCell
+            return (<Type
+              key={i}
+              i={i}
+              id={c.id}
+              contents={dataContents && dataContents[c.id]}
+              name={c.name}
+              target={dataTargets && dataTargets[c.id]}
+              func={func}
+            />)
+          })
+          return collectionsArray
+        }}
+      />
+    </Layout>
+  )
+}
+
+export default CollectionPage
